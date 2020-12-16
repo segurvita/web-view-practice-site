@@ -5,21 +5,24 @@ const sendVideoPlayingToUnity = (isPlaying) => {
     }
 }
 
+const toggleVideo = (isPlaying) => {
+    const v = document.getElementById('video');
+    const state = document.getElementById('state');
+    if (isPlaying) {
+        v.play();
+        state.textContent = '再生中';
+    } else {
+        v.pause();
+        state.textContent = '停止中';
+    }
+}
+
 const addMessageListenerFromUnity = () => {
     window.vuplex.addEventListener('message', (event) => {
         const json = event.data;
         console.log('JSON received: ' + json);
-
-        const v = document.getElementById('video');
-        const state = document.getElementById('state');
-        if (json.target == "video") {
-            if (json.play) {
-                v.play();
-                state.textContent = '再生中';
-            } else {
-                v.pause();
-                state.textContent = '停止中';
-            }
+        if (json.target === "video") {
+            toggleVideo(json.play === "true");
         }
     });
 }
